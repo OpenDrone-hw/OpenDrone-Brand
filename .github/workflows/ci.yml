@@ -1,0 +1,25 @@
+# Proves on a machine that is not Stan's Mac that the committed SVGs are
+# exactly what the generator produces: plain Ubuntu, stock python3, no
+# rsvg-convert, no SF Pro, no fonttools. If the type outlines in
+# src/sf-outlines.json ever stop matching the artwork, or an asset is edited by
+# hand instead of regenerated, this is what catches it.
+#
+# PDF and PNG are renditions and their bytes carry the local cairo and libpng,
+# so --check reports those separately and does not fail on them.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  deterministic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - name: Rebuild and compare
+        run: python3 tools/generate.py --check

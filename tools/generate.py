@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """Regenerate every OpenDrone identity asset from src/.
 
-    python3 tools/generate.py
+    python3 tools/generate.py                     build everything
+    python3 tools/generate.py --check             prove the build is reproducible
+    python3 tools/generate.py --refresh-outlines  re-cut the type (macOS only)
 
-Deterministic. The same source artwork produces byte-identical output on any
-machine: all geometry is solved analytically in geometry.py, nothing is
-measured off a raster, and no timestamp or random value enters a file.
+Deterministic, and --check is how you know: it rebuilds into a scratch tree and
+compares. Every SVG is byte-identical anywhere, because geometry is solved
+analytically in geometry.py, type comes from frozen outlines in
+src/sf-outlines.json, nothing is measured off a raster, and no timestamp or
+random value enters a file.
 
-Agnostic. SVG generation is pure Python with no third-party imports. Two
-external tools are optional and only affect derived formats:
-
-    rsvg-convert   PDF and PNG renditions. Without it the SVGs still build.
-    SF Pro         macOS system font, only for the connector words ("by",
-                   "an", "project") in the endorsement lockups. Without it
-                   every other asset still builds.
+The SVGs are the assets. PDF and PNG are renditions, made by rsvg-convert when
+it is installed; their bytes carry the local cairo and libpng, so --check
+reports a difference there as renderer drift rather than a build failure.
 
 What it writes:
 
@@ -21,6 +21,7 @@ What it writes:
     wordmark/   the OpenDrone logotype
     avatar/     the mark on a gold squircle, for GitHub and social
     lockup/     OpenDrone with the incutec endorsement
+    sheet/      the one-page brand sheet
 
 The mark is the D counter cut out of the O: one vertical line through the O's
 counter, closed flat. It is a single path with two contours and no boolean
@@ -176,21 +177,26 @@ def inc_wordmark(x, baseline, xheight, text_fill, accent_fill=TEAL):
 
 
 # ---- SF Pro, connector words only ------------------------------------------
+# The lockups and the sheet set a handful of words in SF Pro and convert them to
+# outlines. Reading the font at build time made the output depend on the machine
+# twice over: SFNS.ttf ships only with macOS, so a Linux run silently skipped
+# those assets, and its outlines change between macOS releases, so two Macs
+# could disagree. The outlines are therefore frozen into src/sf-outlines.json,
+# which is what a normal build reads. Only --refresh-outlines touches the font,
+# and doing so is a deliberate act with a reviewable diff.
 SF = "/System/Library/Fonts/SFNS.ttf"
+OUTLINES = f"{SRC}/sf-outlines.json"
 _SF_CACHE = {}
+_REFRESH = "--refresh-outlines" in sys.argv
+_FROZEN = {}
+_RECORDED = {}
 
-
-def sf_available():
-    if not os.path.exists(SF):
-        return False
-    try:
-        import fontTools  # noqa: F401
-    except ImportError:
-        return False
-    return True
+if not _REFRESH and os.path.exists(OUTLINES):
+    _FROZEN = _json.load(open(OUTLINES))
 
 
 def _sf(weight, opsz):
+    """The instantiated variable font. Only reachable under --refresh-outlines."""
     key = (weight, opsz)
     if key not in _SF_CACHE:
         from fontTools.ttLib import TTFont
@@ -200,24 +206,95 @@ def _sf(weight, opsz):
     return _SF_CACHE[key]
 
 
+def _face(weight):
+    """Everything the generator needs at one weight: per-character outline and
+    advance, plus the two reference heights it scales type by.
+
+    Frozen: read from src/sf-outlines.json, keyed by weight.
+    Refreshing: read from the installed font and recorded for writing out.
+    """
+    key = str(weight)
+    if not _REFRESH:
+        face = _FROZEN.get("weights", {}).get(key)
+        if face is None:
+            raise SystemExit(
+                f"no frozen outlines for weight {weight} in {OUTLINES}.\n"
+                "Run  python3 tools/generate.py --refresh-outlines  on a machine "
+                "with SF Pro and fontTools, and commit the result.")
+        return face
+    face = _RECORDED.setdefault(key, {"glyphs": {}})
+    if "e_height" not in face:
+        f = _sf(weight, 96)
+        gs, cmap = f.getGlyphSet(), f.getBestCmap()
+        e = geo.bbox(geo.parse(_pen(gs, cmap[ord("e")])))
+        h = geo.bbox(geo.parse(_pen(gs, cmap[ord("H")])))
+        face["e_height"] = e[3] - e[1]
+        face["cap_height"] = h[3] - h[1]
+        face["units_per_em"] = f["head"].unitsPerEm
+    return face
+
+
+def _glyph(weight, ch):
+    """Outline and advance for one character, or None where the font has no
+    glyph for it (the callers space that case themselves)."""
+    face = _face(weight)
+    key = f"U+{ord(ch):04X}"
+    if not _REFRESH:
+        return face["glyphs"].get(key)
+    if key not in face["glyphs"]:
+        f = _sf(weight, 96)
+        gs, cmap = f.getGlyphSet(), f.getBestCmap()
+        name = cmap.get(ord(ch))
+        face["glyphs"][key] = (
+            None if name is None
+            else {"d": _pen(gs, name), "adv": gs[name].width})
+    return face["glyphs"][key]
+
+
+def write_outlines():
+    """Freeze what this build asked for. Sorted keys and a stable shape, so the
+    file diffs line by line when a glyph really changes and not otherwise."""
+    from fontTools.ttLib import TTFont
+    ver = TTFont(SF)["name"].getDebugName(5) or "unknown"
+    doc = {
+        "$comment": (
+            "SF Pro outlines for the connector words and the brand sheet, frozen "
+            "so a build needs neither the font nor macOS. Regenerate with "
+            "tools/generate.py --refresh-outlines; review the diff, since it "
+            "changes the artwork."),
+        "source": {"font": SF, "version": ver.strip(), "optical_size": 96},
+        "weights": {
+            w: {
+                "units_per_em": f["units_per_em"],
+                "e_height": f["e_height"],
+                "cap_height": f["cap_height"],
+                "glyphs": {k: f["glyphs"][k] for k in sorted(f["glyphs"])},
+            }
+            for w, f in sorted(_RECORDED.items(), key=lambda kv: int(kv[0]))
+        },
+    }
+    open(OUTLINES, "w").write(_json.dumps(doc, indent=2, sort_keys=False) + "\n")
+    n = sum(len(f["glyphs"]) for f in _RECORDED.values())
+    print(f"   wrote {os.path.relpath(OUTLINES, ROOT)}  "
+          f"({n} glyphs, {len(_RECORDED)} weights, {ver.strip()})")
+
+
 def sf_run(text, x, baseline, xheight, fill, weight=400):
     """Connector words on the same x-height as the traced logotypes."""
-    from fontTools.pens.svgPathPen import SVGPathPen
-    f = _sf(weight, 96)
-    gs, cmap = f.getGlyphSet(), f.getBestCmap()
-    e_ink = geo.bbox(geo.parse(_pen(gs, cmap[ord("e")])))
-    k = xheight / (e_ink[3] - e_ink[1])
+    face = _face(weight)
+    k = xheight / face["e_height"]
     parts, adv, boxes = [], 0.0, []
     for ch in text:
-        g = cmap[ord(ch)]
-        d = _pen(gs, g)
-        if d:
+        g = _glyph(weight, ch)
+        if g is None:
+            raise SystemExit(f"no glyph for {ch!r} at weight {weight}")
+        if g["d"]:
             parts.append(f'    <path transform="translate({_f(x + adv * k)},{_f(baseline)}) '
-                         f'scale({_f(k)},{_f(-k)})" d="{d}"/>\n')
-            b = geo.bbox(geo.parse(d))
+                         f'scale({_f(k)},{_f(-k)})" d="{g["d"]}"/>\n')
+            b = geo.bbox(geo.parse(g["d"]))
             boxes.append((x + (adv + b[0]) * k, baseline - b[3] * k,
                           x + (adv + b[2]) * k, baseline - b[1] * k))
-        adv += gs[g].width
+        adv += g["adv"]
     frag = f'  <g fill="{fill}">\n{"".join(parts)}  </g>\n'
     ink = (min(b[0] for b in boxes), min(b[1] for b in boxes),
            max(b[2] for b in boxes), max(b[3] for b in boxes))
@@ -308,9 +385,6 @@ def build_avatar():
 
 
 def build_lockups():
-    if not sf_available():
-        print("   skipped lockups: SF Pro or fonttools unavailable")
-        return
     XH, BASE, LEFT = 100.0, 800.0, 400.0
     for name, bg, open_f, inc_f, conn_f, pad, px in (
             ("opendrone-incutec-project-ondark", BG_DARK, PAPER, PAPER, PAPER, 0.55, 1600),
@@ -336,23 +410,20 @@ def build_lockups():
 
 
 def text(txt, x, y, px, fill, weight=400, anchor="start"):
-    """SF Pro as outlines, positioned by cap height in px. Deterministic: the
-    committed SVG carries no font dependency, only the generator needs SF Pro."""
-    from fontTools.pens.svgPathPen import SVGPathPen
-    f = _sf(weight, 96)
-    gs, cmap = f.getGlyphSet(), f.getBestCmap()
-    cap = geo.bbox(geo.parse(_pen(gs, cmap[ord("H")])))
-    k = px / (cap[3] - cap[1])
+    """SF Pro as outlines, positioned by cap height in px. The committed SVG
+    carries no font dependency, and neither does the build: outlines come from
+    src/sf-outlines.json."""
+    face = _face(weight)
+    k = px / face["cap_height"]
     parts, adv = [], 0.0
     for ch in txt:
-        g = cmap.get(ord(ch))
+        g = _glyph(weight, ch)
         if g is None:
-            adv += f["head"].unitsPerEm * 0.28
+            adv += face["units_per_em"] * 0.28
             continue
-        d = _pen(gs, g)
-        if d:
-            parts.append((d, adv))
-        adv += gs[g].width
+        if g["d"]:
+            parts.append((g["d"], adv))
+        adv += g["adv"]
     w = adv * k
     ox = x - w if anchor == "end" else (x - w / 2 if anchor == "middle" else x)
     body = "".join(
@@ -365,9 +436,6 @@ def build_sheet():
     """One page a vendor or a journalist can be handed. Text is outlined, so it
     renders identically everywhere and cannot silently fall back to a substitute
     face the way the previous sheet did."""
-    if not sf_available():
-        print("   skipped sheet: SF Pro or fonttools unavailable")
-        return
     W, H = 1600.0, 800.0
     INK_L, MUTE = INK, "#6b6459"
     b = [f'  <rect width="{_f(W)}" height="{_f(H)}" fill="#ffffff"/>\n']
@@ -432,11 +500,7 @@ def build_sheet():
           svg_doc((0, 0, W, H), "".join(b), label="OpenDrone brand sheet"),
           (1600,), pdf=True)
 
-if __name__ == "__main__":
-    print(f"gold {GOLD} · baseline {OD_BASELINE:.3f} · x-height {OD_XHEIGHT:.3f} "
-          f"· stem ratio {STEM_RATIO}")
-    if not HAVE_RSVG:
-        print("   rsvg-convert not found: writing SVG only")
+def build_all():
     print("mark:")
     build_mark()
     print("wordmark:")
@@ -447,3 +511,74 @@ if __name__ == "__main__":
     build_lockups()
     print("sheet:")
     build_sheet()
+
+
+def check():
+    """Rebuild into a scratch tree and compare, so determinism is something the
+    repo proves rather than claims.
+
+    SVG is generated here in pure Python and must match byte for byte; a
+    mismatch is a bug or an uncommitted edit. PDF and PNG come out of
+    rsvg-convert, so their bytes follow the installed cairo and libpng and are
+    only comparable against the machine that last wrote them: they are reported
+    separately and do not fail the check.
+    """
+    import filecmp
+    import tempfile
+
+    global ROOT
+    committed, tmp = ROOT, tempfile.mkdtemp(prefix="brand-check-")
+    try:
+        ROOT = tmp
+        build_all()
+    finally:
+        ROOT = committed
+
+    svg_bad, raster_bad, missing = [], [], []
+    for sub in ("mark", "wordmark", "avatar", "lockup", "sheet"):
+        d = f"{tmp}/{sub}"
+        if not os.path.isdir(d):
+            continue
+        for name in sorted(os.listdir(d)):
+            rel = f"{sub}/{name}"
+            here = f"{committed}/{rel}"
+            if not os.path.exists(here):
+                missing.append(rel)
+            elif not filecmp.cmp(f"{d}/{name}", here, shallow=False):
+                (svg_bad if name.endswith(".svg") else raster_bad).append(rel)
+
+    shutil.rmtree(tmp, ignore_errors=True)
+    print()
+    if missing:
+        print(f"missing from the repo ({len(missing)}):")
+        for r in missing:
+            print(f"   {r}")
+    if raster_bad:
+        print(f"renderer drift, not a determinism failure ({len(raster_bad)} "
+              f"file(s)): rsvg-convert here differs from the one that wrote the "
+              f"committed renditions. Rerun the generator to adopt this machine's.")
+        for r in raster_bad:
+            print(f"   {r}")
+    if svg_bad:
+        print(f"NOT DETERMINISTIC: {len(svg_bad)} SVG(s) differ from the committed build:")
+        for r in svg_bad:
+            print(f"   {r}")
+        return 1
+    if missing:
+        return 1
+    print("deterministic: every committed SVG is byte-identical to a fresh build.")
+    return 0
+
+
+if __name__ == "__main__":
+    print(f"gold {GOLD} · baseline {OD_BASELINE:.3f} · x-height {OD_XHEIGHT:.3f} "
+          f"· stem ratio {STEM_RATIO}")
+    if not HAVE_RSVG:
+        print("   rsvg-convert not found: writing SVG only")
+    if _REFRESH:
+        print(f"   refreshing outlines from {SF}")
+    if "--check" in sys.argv:
+        sys.exit(check())
+    build_all()
+    if _REFRESH:
+        write_outlines()
