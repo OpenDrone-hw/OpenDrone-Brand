@@ -28,32 +28,49 @@ previews. **Send a vendor the SVG or the PDF, never the PNG.**
 
 ## Colour
 
-| Token | Hex | Use |
-|---|---|---|
-| Gold | `#ffb700` | "Drone", the mark, the accent. Every ground, no exceptions |
-| Ink | `#1a1a1e` | "Open" on light backgrounds |
-| Off-white | `#e5e5e5` | "Open" on dark backgrounds |
-| Surface dark | `#0d0d10` | Brand dark background |
-| Surface light | `#f7f6f3` | Brand off-white background, not pure white |
-| incutec teal | `#00B2A9` | The incutec accent. Only ever inside the incutec logotype |
+**[`tokens.json`](tokens.json) is the source of truth**, for this repo and every
+other one. Screen values, the physical standard, tolerances, per-substrate
+specs, and the list of retired hexes so a grep for an old value lands somewhere
+useful. Read it rather than copying values out of this page.
 
-**There is one gold and it does not change with the background.** It is hue
-80.25 sitting exactly on the sRGB chroma ceiling, which is the most gold a
-screen can be. Chroma falls above that lightness, so there is nothing brighter
-to reach for and lightening it only turns it chalky.
+### On screen
+
+One gold, `#ffb700`, and it does not change with the background. Hue 80.25
+sitting exactly on the sRGB chroma ceiling, which is the most gold a screen can
+be. Chroma falls above that lightness, so there is nothing brighter to reach for
+and lightening it only turns it chalky.
 
 Until 2026-08-14 there were two, `#c89d2e` on light and `#fdb600` on dark. They
 were 0.112 apart in OKLab and the light one drifted 6 degrees toward green,
 which is why it read brown on white. The hue drift and the missing chroma cost
-nothing to fix. The lightness gap was doing real work and giving it up is a
-deliberate trade: gold is 11.11:1 on the dark surface but **1.62:1 on the light
+nothing to fix. The lightness gap was doing real work, and giving it up is a
+deliberate trade: gold is 11.11:1 on the dark surface and **1.62:1 on the light
 one**. Logos are exempt from contrast rules, so the mark and the wordmark are
-fine. Gold text on a light ground is a brand accent, never body copy, and never
-a focus ring or a control boundary.
+fine. Gold on a light ground is a brand accent, never body copy, and never a
+focus ring or a control boundary.
 
-`#ffb700` is outside CMYK gamut and cannot be reproduced in process colour.
-Printed work needs a spot colour matched against a physical guide. Nobody has
-picked one yet, so do not guess.
+### Off screen
+
+`#ffb700` is outside CMYK gamut, so process colour cannot reproduce it and a
+hex is not a specification a supplier can work from. The physical master is
+**Pantone 1235 C**, which measures **dE2000 0.82** from the screen gold. That is
+below the roughly 1.0 threshold where a difference becomes visible, so the two
+read as the same gold.
+
+The rule that keeps aluminium, print and fabric agreeing with each other:
+
+> Every substrate is matched to the **1235 C chip**. Never to the hex, and never
+> to another substrate.
+
+Matching anodising to a printed sample, or a printed sample to a screen, is how
+a palette drifts apart one product at a time. Tolerance is dE2000 2.0 on primary
+surfaces, measured on the production substrate under D65 with a 10 degree
+observer. Anodising and powder coat need a signed master panel kept on file and
+re-approved per batch, because both are dye processes and both drift.
+
+Per-substrate specs are in `tokens.json` under `physical.substrates`. One is
+still open: nobody has picked the TCX number for woven goods, which needs a
+physical fan held against the master chip.
 
 ## Using it
 

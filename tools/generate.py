@@ -40,16 +40,19 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = f"{ROOT}/src"
 
 # ---- colour ----------------------------------------------------------------
-# One gold, both grounds. Hue 80.25 at the sRGB chroma ceiling, which is the
-# most gold a screen can be; there is no brighter one. Chroma collapses above
-# this lightness, so do not "brighten" it. A second, darker gold is what made
-# the mark read brown on white, so there is deliberately no second gold.
-GOLD = "#ffb700"
-INK = "#1a1a1e"          # near-black neutral, "Open" on light
-PAPER = "#e5e5e5"        # off-white neutral, "Open" on dark
-BG_DARK = "#0d0d10"
-BG_LIGHT = "#f7f6f3"
-TEAL = "#00B2A9"         # incutec only, never OpenDrone
+# Read, never declared. tokens.json is the source of truth for every OpenDrone
+# colour, screen and physical, and this file is one of its consumers. Putting a
+# hex here would make a second source, which is the whole thing tokens.json
+# exists to prevent.
+import json as _json
+
+_T = _json.load(open(f"{ROOT}/tokens.json"))["screen"]
+GOLD = _T["gold"]["hex"]
+INK = _T["ink"]["hex"]
+PAPER = _T["paper"]["hex"]
+BG_DARK = _T["surface_dark"]["hex"]
+BG_LIGHT = _T["surface_light"]["hex"]
+TEAL = _T["incutec_teal"]["hex"]
 
 # ---- source geometry -------------------------------------------------------
 WM_TF = "translate(0,433) scale(0.1,-0.1)"     # traced units -> display units
