@@ -335,6 +335,103 @@ def build_lockups():
         write("lockup", name, doc, (px,))
 
 
+def text(txt, x, y, px, fill, weight=400, anchor="start"):
+    """SF Pro as outlines, positioned by cap height in px. Deterministic: the
+    committed SVG carries no font dependency, only the generator needs SF Pro."""
+    from fontTools.pens.svgPathPen import SVGPathPen
+    f = _sf(weight, 96)
+    gs, cmap = f.getGlyphSet(), f.getBestCmap()
+    cap = geo.bbox(geo.parse(_pen(gs, cmap[ord("H")])))
+    k = px / (cap[3] - cap[1])
+    parts, adv = [], 0.0
+    for ch in txt:
+        g = cmap.get(ord(ch))
+        if g is None:
+            adv += f["head"].unitsPerEm * 0.28
+            continue
+        d = _pen(gs, g)
+        if d:
+            parts.append((d, adv))
+        adv += gs[g].width
+    w = adv * k
+    ox = x - w if anchor == "end" else (x - w / 2 if anchor == "middle" else x)
+    body = "".join(
+        f'    <path transform="translate({_f(ox + a * k)},{_f(y)}) '
+        f'scale({_f(k)},{_f(-k)})" d="{d}"/>\n' for d, a in parts)
+    return f'  <g fill="{fill}">\n{body}  </g>\n', w
+
+
+def build_sheet():
+    """One page a vendor or a journalist can be handed. Text is outlined, so it
+    renders identically everywhere and cannot silently fall back to a substitute
+    face the way the previous sheet did."""
+    if not sf_available():
+        print("   skipped sheet: SF Pro or fonttools unavailable")
+        return
+    W, H = 1600.0, 800.0
+    INK_L, MUTE = INK, "#6b6459"
+    b = [f'  <rect width="{_f(W)}" height="{_f(H)}" fill="#ffffff"/>\n']
+    b.append(text("OpenDrone brand sheet", 80, 96, 40, INK_L, 700)[0])
+    b.append(text("One gold. One mark. Generated, never hand-placed.",
+                  80, 136, 17, MUTE)[0])
+    b.append(f'  <rect x="80" y="168" width="{_f(W - 160)}" height="1" fill="#e3ded2"/>\n')
+
+    def cap(t, x, y):
+        b.append(text(t, x, y, 11, MUTE, 500)[0])
+
+    # wordmark, both grounds
+    cap("PRIMARY / ON LIGHT", 80, 210)
+    wm, ink = wordmark(80, 300, 62, INK, GOLD)
+    b.append(wm)
+    cap("PRIMARY / ON DARK", 840, 210)
+    b.append(f'  <rect x="820" y="232" width="700" height="110" rx="10" fill="{BG_DARK}"/>\n')
+    wm2, _ = wordmark(860, 300, 62, PAPER, GOLD)
+    b.append(wm2)
+
+    # mark + avatar
+    cap("MARK", 80, 420)
+    m1, _ = mark(80, 440, 110, GOLD)
+    b.append(f'  <rect x="60" y="420" width="150" height="150" rx="10" fill="{BG_DARK}"/>\n')
+    b.append(m1)
+    m2, _ = mark(250, 440, 110, INK)
+    b.append(m2)
+    cap("AVATAR", 440, 420)
+    b.append(f'  <rect x="440" y="440" width="150" height="150" rx="34" fill="{GOLD}"/>\n')
+    m3, mi = mark(440 + (150 - 110 * (MARK_INK[2] - MARK_INK[0]) / (MARK_INK[3] - MARK_INK[1])) / 2,
+                  460, 110, BG_DARK)
+    b.append(m3)
+
+    # colour
+    cap("COLOUR / SCREEN", 840, 420)
+    sw = [("Gold", GOLD), ("Ink", INK), ("Off-white", PAPER),
+          ("Surface dark", BG_DARK), ("Surface light", BG_LIGHT)]
+    for i, (n, hx) in enumerate(sw):
+        x = 840 + i * 136
+        b.append(f'  <rect x="{_f(x)}" y="440" width="120" height="76" rx="7" fill="{hx}" '
+                 f'stroke="#e3ded2"/>\n')
+        b.append(text(n, x, 540, 12, INK_L, 600)[0])
+        b.append(text(hx, x, 560, 12, MUTE)[0])
+
+    cap("COLOUR / PHYSICAL", 840, 600)
+    b.append(text("Pantone 1235 C is the master. dE2000 0.82 from the screen gold.",
+                  840, 626, 15, INK_L)[0])
+    b.append(text("Every substrate matches the chip, never the hex and never another substrate.",
+                  840, 650, 15, MUTE)[0])
+    b.append(text("#ffb700 is outside CMYK gamut: specify the spot ink, never a process build.",
+                  840, 674, 15, MUTE)[0])
+
+    cap("CLEAR SPACE", 80, 640)
+    b.append(text("At least the height of the O on every side.", 80, 666, 15, MUTE)[0])
+    b.append(text("Minimum wordmark width 120 px on screen, 25 mm in print.", 80, 690, 15, MUTE)[0])
+
+    b.append(f'  <rect x="80" y="{_f(H - 96)}" width="{_f(W - 160)}" height="1" fill="#e3ded2"/>\n')
+    b.append(text("opendrone.store", 80, H - 56, 15, MUTE, 600)[0])
+    b.append(text("Trademarks. See README before use.", W - 80, H - 56, 15, MUTE,
+                  anchor="end")[0])
+    write("sheet", "opendrone-brand-sheet",
+          svg_doc((0, 0, W, H), "".join(b), label="OpenDrone brand sheet"),
+          (1600,), pdf=True)
+
 if __name__ == "__main__":
     print(f"gold {GOLD} · baseline {OD_BASELINE:.3f} · x-height {OD_XHEIGHT:.3f} "
           f"· stem ratio {STEM_RATIO}")
@@ -348,3 +445,5 @@ if __name__ == "__main__":
     build_avatar()
     print("lockups:")
     build_lockups()
+    print("sheet:")
+    build_sheet()

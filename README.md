@@ -18,13 +18,16 @@ what you need from here instead of screenshotting the website.
 | `wordmark/` | The **OpenDrone** logotype. Primary asset. On-light, on-dark, the same two with the brand background baked in, and one-colour black, white and gold. |
 | `mark/` | The **OD monogram**, for favicons, app icons and tight spaces. |
 | `avatar/` | The GitHub and social avatar: the mark on a gold squircle. |
-| `lockup/` | **OpenDrone by incutec** and **OpenDrone, an incutec project**, for when the company relationship needs to be visible. |
+| `lockup/` | **OpenDrone, an incutec project**, for when the company relationship needs to be visible. |
 | `src/` | The two source logotypes everything is built from. |
+| `sheet/` | One-page brand sheet, for vendors and press. |
 | `tools/` | The generator. |
 
-Every file exists as SVG. The wordmark and mark also ship as PDF, which opens
-and edits natively in Illustrator, Affinity and Inkscape, and as PNG for
-previews. **Send a vendor the SVG or the PDF, never the PNG.**
+Every file exists as SVG. The wordmark, mark and sheet also ship as PDF, which
+opens and edits natively in Illustrator, Affinity and Inkscape, and as PNG for
+previews. **Send a vendor the SVG or the PDF, never the PNG.** All text in the
+generated files is outlined, so nothing can fall back to a substitute typeface
+on a machine that lacks SF Pro.
 
 ## Colour
 
