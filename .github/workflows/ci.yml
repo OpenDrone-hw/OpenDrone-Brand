@@ -1,4 +1,4 @@
-# Proves on a machine that is not Stan's Mac that the committed SVGs are
+# Proves on a machine that is not the author's Mac that the committed SVGs are
 # exactly what the generator produces: plain Ubuntu, stock python3, no
 # rsvg-convert, no SF Pro, no fonttools. If the type outlines in
 # src/sf-outlines.json ever stop matching the artwork, or an asset is edited by
