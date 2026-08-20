@@ -32,7 +32,7 @@ SF Pro.
 ## Colour
 
 **[`tokens.json`](tokens.json) is the source of truth**, for this repo and every
-other one: screen values, the physical standard, tolerances, per-substrate
+other one: screen values, the physical standards, tolerances, per-substrate
 specs, and the retired hexes so a grep for an old value lands somewhere useful.
 Read it rather than copying values out of this page.
 
@@ -42,13 +42,18 @@ surface and **1.62:1 on the light one**: logos are exempt from contrast rules, s
 the mark and the wordmark are fine, but gold on a light ground is a brand accent
 and never body copy, a focus ring or a control boundary.
 
-Off screen, the master is **Pantone 1235 C** (dE2000 0.82 from the screen gold,
-below the threshold where a difference is visible). `#ffb700` is outside CMYK
-gamut, so a hex is not a specification a supplier can work from. One rule keeps
-aluminium, print and fabric agreeing with each other:
+Off screen, the gold master is **Pantone 1235 C** (dE2000 0.82 from the screen
+gold, below the threshold where a difference is visible). `#ffb700` is outside
+CMYK gamut, so a hex is not a specification a supplier can work from. One rule
+keeps aluminium, print and fabric agreeing with each other:
 
-> Every substrate is matched to the **1235 C chip**. Never to the hex, and never
-> to another substrate.
+> Every substrate is matched to the **chip**. Never to the hex, and never to
+> another substrate.
+
+Anodised aluminium also comes in green, master **Pantone 7743 C**, tolerance
+dE2000 3.0. That one is a chosen chip rather than a close conversion: no Pantone
+sits within 3 dE of the screen green, and it has not been confirmed on a
+physical fan yet. Read `physical.green_master` before ordering.
 
 ## Using it
 
