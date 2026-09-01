@@ -1,0 +1,27 @@
+{
+  "gold": {
+    "master": {"system": "Pantone Solid Coated", "code": "1235 C", "delta_e_2000_from_screen": 0.82},
+    "rule": "Every substrate matches the chip, never the hex and never another substrate.",
+    "tolerance": {"primary": 2.0, "secondary": 3.0, "metric": "dE2000"},
+    "measurement": "Spectrophotometer, D65 illuminant, 10 degree observer, measured on the production substrate.",
+    "substrates": {
+      "print_coated": "Pantone 1235 C spot ink",
+      "print_uncoated": "Pantone 1235 U; approve a drawdown",
+      "digital_print": "Closest available build; known compromise, not for packaging",
+      "anodised_aluminium": "Match Pantone 1235 C within dE2000 2.0 against an approved master panel",
+      "powder_coat": "Match Pantone 1235 C within dE2000 2.0; do not substitute a RAL number",
+      "textile": "Choose and record the nearest Pantone TCX using a physical fan",
+      "plastic": "Pantone PQ match on a production-thickness part"
+    }
+  },
+  "green": {
+    "master": {"system": "Pantone Solid Coated", "code": "7743 C", "status": "chosen from published values; physical fan confirmation pending"},
+    "fallback": "Pantone 364 C if 7743 C is unavailable",
+    "tolerance": {"primary": 3.0, "metric": "dE2000"},
+    "anodised_aluminium": "Match Pantone 7743 C within dE2000 3.0 against an approved master panel"
+  },
+  "open": [
+    "Choose the TCX standard for woven goods.",
+    "Confirm Pantone 7743 C against a physical fan and record measured Lab values."
+  ]
+}

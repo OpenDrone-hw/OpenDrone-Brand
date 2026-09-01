@@ -1,0 +1,27 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "$description": "OpenDrone foundation tokens. Physical production standards live in standards/production.json.",
+  "color": {
+    "$type": "color",
+    "brand": {
+      "gold": {
+        "$value": {"colorSpace": "srgb", "components": [1, 0.717647, 0], "hex": "#ffb700"},
+        "$description": "OpenDrone identity gold. Safe for the logo; not text, focus or a control boundary on light backgrounds."
+      },
+      "green-deep": {
+        "$value": {"colorSpace": "srgb", "components": [0.196078, 0.439216, 0.078431], "hex": "#327014"},
+        "$description": "PCB solder-mask and anodised-aluminium green on screen."
+      },
+      "incutec-teal": {
+        "$value": {"colorSpace": "srgb", "components": [0, 0.698039, 0.662745], "hex": "#00B2A9"},
+        "$description": "Used only inside the Incutec endorsement artwork."
+      }
+    },
+    "neutral": {
+      "ink": {"$value": {"colorSpace": "srgb", "components": [0.101961, 0.101961, 0.117647], "hex": "#1a1a1e"}},
+      "paper": {"$value": {"colorSpace": "srgb", "components": [0.898039, 0.898039, 0.898039], "hex": "#e5e5e5"}},
+      "surface-dark": {"$value": {"colorSpace": "srgb", "components": [0.05098, 0.05098, 0.062745], "hex": "#0d0d10"}},
+      "surface-light": {"$value": {"colorSpace": "srgb", "components": [0.968627, 0.964706, 0.952941], "hex": "#f7f6f3"}}
+    }
+  }
+}

@@ -41,19 +41,27 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = f"{ROOT}/src"
 
 # ---- colour ----------------------------------------------------------------
-# Read, never declared. tokens.json is the source of truth for every OpenDrone
-# colour, screen and physical, and this file is one of its consumers. Putting a
-# hex here would make a second source, which is the whole thing tokens.json
-# exists to prevent.
+# Read, never declared. DTCG tokens are the source of truth for screen colour;
+# physical standards live separately because they are not design tokens.
 import json as _json
 
-_T = _json.load(open(f"{ROOT}/tokens.json"))["screen"]
-GOLD = _T["gold"]["hex"]
-INK = _T["ink"]["hex"]
-PAPER = _T["paper"]["hex"]
-BG_DARK = _T["surface_dark"]["hex"]
-BG_LIGHT = _T["surface_light"]["hex"]
-TEAL = _T["incutec_teal"]["hex"]
+_T = _json.load(open(f"{ROOT}/tokens/core.tokens.json"))
+_PRODUCTION = _json.load(open(f"{ROOT}/standards/production.json"))
+
+
+def _token(path):
+    node = _T
+    for part in path.split("."):
+        node = node[part]
+    return node["$value"]
+
+
+GOLD = _token("color.brand.gold")["hex"]
+INK = _token("color.neutral.ink")["hex"]
+PAPER = _token("color.neutral.paper")["hex"]
+BG_DARK = _token("color.neutral.surface-dark")["hex"]
+BG_LIGHT = _token("color.neutral.surface-light")["hex"]
+TEAL = _token("color.brand.incutec-teal")["hex"]
 
 # ---- source geometry -------------------------------------------------------
 WM_TF = "translate(0,433) scale(0.1,-0.1)"     # traced units -> display units
@@ -481,11 +489,14 @@ def build_sheet():
         b.append(text(hx, x, 560, 12, MUTE)[0])
 
     cap("COLOUR / PHYSICAL", 840, 600)
-    b.append(text("Pantone 1235 C is the master. dE2000 0.82 from the screen gold.",
+    gold_standard = _PRODUCTION["gold"]
+    master = gold_standard["master"]
+    b.append(text(f'Pantone {master["code"]} is the master. dE2000 '
+                  f'{master["delta_e_2000_from_screen"]:.2f} from the screen gold.',
                   840, 626, 15, INK_L)[0])
-    b.append(text("Every substrate matches the chip, never the hex and never another substrate.",
+    b.append(text(gold_standard["rule"],
                   840, 650, 15, MUTE)[0])
-    b.append(text("#ffb700 is outside CMYK gamut: specify the spot ink, never a process build.",
+    b.append(text(f"{GOLD} is outside CMYK gamut: specify the spot ink, never a process build.",
                   840, 674, 15, MUTE)[0])
 
     cap("CLEAR SPACE", 80, 640)
@@ -523,10 +534,27 @@ def check():
     only comparable against the machine that last wrote them: they are reported
     separately and do not fail the check.
     """
+    global ROOT
+
     import filecmp
     import tempfile
 
-    global ROOT
+    for folder in ("tokens", "standards"):
+        for name in sorted(os.listdir(f"{ROOT}/{folder}")):
+            if name.endswith(".json"):
+                _json.load(open(f"{ROOT}/{folder}/{name}"))
+    resolver = _json.load(open(f"{ROOT}/tokens/resolver.json"))
+    references = []
+    for item in resolver["sets"].values():
+        references.extend(source["$ref"] for source in item["sources"])
+    for modifier in resolver["modifiers"].values():
+        for context in modifier["contexts"].values():
+            references.extend(source["$ref"] for source in context)
+    for reference in references:
+        if not os.path.isfile(f"{ROOT}/tokens/{reference}"):
+            raise SystemExit(f"missing token source: tokens/{reference}")
+    print("metadata: valid JSON and resolver references")
+
     committed, tmp = ROOT, tempfile.mkdtemp(prefix="brand-check-")
     try:
         ROOT = tmp

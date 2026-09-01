@@ -1,0 +1,9 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/format.json",
+  "color": {
+    "$type": "color",
+    "background": {"canvas": {"$value": "{color.neutral.surface-light}"}},
+    "text": {"primary": {"$value": "{color.neutral.ink}"}},
+    "identity": {"accent": {"$value": "{color.brand.gold}"}}
+  }
+}

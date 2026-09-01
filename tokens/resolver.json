@@ -1,0 +1,21 @@
+{
+  "$schema": "https://www.designtokens.org/schemas/2025.10/resolver.json",
+  "name": "OpenDrone",
+  "version": "2025.10",
+  "sets": {
+    "core": {"sources": [{"$ref": "core.tokens.json"}]}
+  },
+  "modifiers": {
+    "theme": {
+      "contexts": {
+        "light": [{"$ref": "light.tokens.json"}],
+        "dark": [{"$ref": "dark.tokens.json"}]
+      },
+      "default": "light"
+    }
+  },
+  "resolutionOrder": [
+    {"$ref": "#/sets/core"},
+    {"$ref": "#/modifiers/theme"}
+  ]
+}
