@@ -35,6 +35,50 @@ artwork and production only; it must not invent or override legal copy.
 | OpenRX Lite (OPENRX-LITE) | `ExpressLRS 2.4 GHz receiver` |
 | OpenRX Mono (OPENRX-MONO) | `ExpressLRS 868 MHz + 2.4 GHz` |
 | OpenRX Gemini (OPENRX-GEMINI) | `ExpressLRS true-diversity receiver` |
+| OpenRX Lite U.FL (OPENRX-LITE-UFL) | `ExpressLRS 2.4 GHz receiver · U.FL` |
+| OpenFrame 3 (OPENFRAME-3) | `3-inch freestyle frame · carbon fibre` |
+| OpenFrame 5 (OPENFRAME-5) | `5-inch freestyle frame · carbon fibre` |
+
+Sources for the last three rows: OpenRX Lite U.FL is the OpenRX Lite board
+(2.4 GHz, SX1281, ExpressLRS, 10.0 x 11.5 mm) with a U.FL antenna connector in
+place of the ceramic antenna (`OpenDrone/hardware/OpenRX-Lite-UFL` README). The
+frames are CNC carbon fibre sets in 3" and 5" freestyle sizes with an aluminium
+camera mount pair (`OpenDrone/hardware/OpenFrame` README). Frames have no PCB,
+so the gold board-art rule below does not apply to them; their face art is not
+defined.
+
+### Box fit for the three added SKUs
+
+No box size, board grade or Vistaprint order is recorded for any SKU, so none of
+these is a derived spec. Each is **proposed, not yet ordered**.
+
+| SKU | Contents envelope | Box | Material and print |
+|---|---|---|---|
+| OPENRX-LITE-UFL | same 10.0 x 11.5 mm board as OPENRX-LITE | the OPENRX-LITE box, which is itself unsized | as OPENRX-LITE: Productdozen, CMYK digital, matte, black and gold theme above |
+| OPENFRAME-3 | flat stack 112 x 50 x 37 mm, fasteners excluded | Productdozen, inner at least 122 x 60 x 42 mm | Productdozen, CMYK digital, matte; board grade unknown |
+| OPENFRAME-5 | flat stack 147 x 67.6 x 48.5 mm, fasteners excluded | Productdozen, inner at least 157 x 78 x 54 mm | Productdozen, CMYK digital, matte; board grade unknown |
+
+Fit calculation. Part sizes come from the Dongguan Silt Metal quotation sheets
+of 2026-08-10 (`sourcing/files/email/dongguan-silt-metal/`), whose plate
+thicknesses match `OpenDrone/hardware/OpenFrame/docs/DESIGN.md`. That geometry is
+the pre-reset design; the OpenFrame README states the CAD is not finalised, so
+re-run this when the drawings change.
+
+- 3": footprint is the largest plate outline, top plate 112 x 32.5 mm against
+  bottom and middle plates 50 mm wide, so 112 x 50 mm. Stack height: 4 arms at
+  4.0 + bottom 2.5 + middle 2.5 + top 2.0 + cross 4.0 + two camera mounts at
+  5.0 = 37.0 mm.
+- 5": footprint top plate 147 mm long, bottom and middle plates 67.6 mm wide, so
+  147 x 67.6 mm. Stack height: 4 arms at 6.0 + bottom 3.0 + middle 3.0 + top 2.5
+  + cross 6.0 + two camera mounts at 5.0 = 48.5 mm. The 5" camera mount on that
+  sheet repeats the 3" dimension (39.53 x 26.5 x 5.0 mm), so its height is
+  unverified.
+- Minimum inner box = envelope plus 5 mm clearance per side on length and width
+  and 5 mm on height, rounded up to whole millimetres.
+- The only packaging bought so far, the RAJAPACK 18 x 26.5 cm padded mailer
+  (order 2493987), is the outer shipping layer and not a retail box. Both flat
+  stacks fit its face (180 x 265 mm against 112 x 50 and 147 x 67.6 mm), but its
+  usable thickness is not recorded, so it is not proposed as the box.
 
 - "Open Source Hardware" line or the OSHW-style gear mark — the open design is the differentiator; it earns front-panel space.
 
