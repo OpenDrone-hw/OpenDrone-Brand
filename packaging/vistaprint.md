@@ -17,7 +17,7 @@ artwork and production only; it must not invent or override legal copy.
 
 - **Ground:** near-black `#0a0a0a` (brand Near Black). **Art/type accent:** packaging gold `#C9A227`.
 - The canonical screen and production colours are defined in `../BRAND.md`, `../tokens/` and `../standards/`; black/gold is a packaging-only direction. Use the generated OpenDrone and Incutec lockups from this repository.
-- Board artwork: flat gold vector front/back renders of each PCB, generated from the real KiCad files with `../../../scripts/hardware/kicad/packaging_art.py` (SVG, print-ready). For the black box pass `--holes '#0a0a0a' --body '#0a0a0a'`. See `../../../scripts/README.md`.
+- Board artwork: flat gold vector front/back renders of each PCB, generated from the real KiCad files with `../../../scripts/hardware/kicad/packaging_art.py` (SVG, print-ready). `--color` and `--body` are required (the packaging design owns the palette); for the black box pass `--color '#C9A227' --holes '#0a0a0a' --body '#0a0a0a'`. See `../../../scripts/README.md`.
 
 ## Panel-by-panel content
 
