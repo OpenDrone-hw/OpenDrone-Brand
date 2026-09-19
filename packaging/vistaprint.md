@@ -5,7 +5,7 @@ last_updated: 2026-07-03
 tags: [packaging, vistaprint, opendrone, branding, compliance]
 ---
 
-# OpenDrone retail packaging — content spec + Vistaprint procedure
+# OpenDrone retail packaging: content spec and Vistaprint procedure
 
 Black & gold retail boxes for the OpenDrone SKUs, printed via Vistaprint
 ("Productdozen"). This doc defines what goes on every panel, the exact legal
@@ -23,7 +23,7 @@ artwork and production only; it must not invent or override legal copy.
 
 ### Front (face)
 - **OpenDrone** product name, marketed form: e.g. *OpenESC 30x30*, *OpenFC Lite Mini*, *OpenRX Lite* (`../../../stock/product_skus.json` for the canonical list).
-- Gold board art (front side of the board is the default face; the ESC's back is the better-looking side — pick per SKU).
+- Gold board art (front side of the board is the default face; the ESC's back is the better-looking side, pick per SKU).
 - One spec line, gold, max ~6 words. Per current SKUs:
 
 | SKU | Spec line |
@@ -80,7 +80,7 @@ re-run this when the drawings change.
   stacks fit its face (180 x 265 mm against 112 x 50 and 147 x 67.6 mm), but its
   usable thickness is not recorded, so it is not proposed as the box.
 
-- "Open Source Hardware" line or the OSHW-style gear mark — the open design is the differentiator; it earns front-panel space.
+- "Open Source Hardware" line or the OSHW-style gear mark: the open design is the differentiator; it earns front-panel space.
 
 ### Back (legal + info panel)
 Resolve legal fields from the canonical product record at artwork approval:
@@ -107,12 +107,12 @@ Made in China · Designed in Belgium
 - Spine 1: product name + spec line (readable on a shelf).
 - Spine 2: `OpenDrone by Incutec` wordmark + `opendrone.be`.
 
-### Variable data — print as a label, not on the box
+### Variable data: print as a label, not on the box
 Vistaprint boxes are fixed-artwork bulk prints. Everything unit- or
 batch-specific goes on a small in-house label applied to a reserved matte area
 (~50×25 mm) on the back panel:
 - `SN: [batch]-[serial]` (GPSR traceability)
-- EAN-13 barcode — **no GTINs exist yet anywhere in the vault**; the area is
+- EAN-13 barcode: **no GTINs exist yet anywhere in the vault**; the area is
   reserved until GS1 codes are assigned. Product and bundle identity must match
   the declaration unit in `CE.md`.
 - Hardware revision (e.g. `V1.0`).
@@ -146,8 +146,8 @@ This keeps one box print run valid across batches and revisions.
    compose the full flat sheet (Inkscape/Illustrator) with the gold SVGs placed
    per panel, export a single PDF, and use **"Upload ontwerp"** on the
    Buitenkant (outside) surface. Only fall back to the in-browser editor for
-   text tweaks — it can't handle the vector art placement precisely.
-4. **Color:** Vistaprint product boxes are CMYK digital print — no foil/spot
+   text tweaks; it can't handle the vector art placement precisely.
+4. **Color:** Vistaprint product boxes are CMYK digital print, no foil/spot
    gold. Convert gold `#C9A227` to CMYK ≈ `C20 M32 Y95 K10` and check a single
    proof box before a volume run; rich black `C40 M40 Y40 K100` for the ground.
    Matte finish suits the flat-vector look better than gloss.
