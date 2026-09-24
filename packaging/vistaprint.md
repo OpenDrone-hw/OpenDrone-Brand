@@ -127,7 +127,9 @@ This keeps one box print run valid across batches and revisions.
 - Resolve WEEE producer registration and marking against authoritative company
   and compliance evidence before approving artwork; WEEE is separate from CE
   and the DoC.
-- Trademarks are not registered (no EUIPO filing on record), so use TM, not (R).
+- The INCUTEC word mark was filed as an EU trade mark on 3 July 2026 and is
+  not registered yet; OpenDrone is not filed. Use TM, not (R), on packaging.
+  ([Notion task](https://app.notion.com/p/395fe06764e1819b9072cb7fa80cc1e8))
 - Manufacturer identity and contact come from `CE.md`, including
   `contact@opendrone.be`; other documents are not authoritative for the box.
 
