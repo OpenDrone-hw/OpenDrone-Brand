@@ -12,15 +12,15 @@ standards and generated identity assets.
 
 ## Structure
 
-- `BRAND.md` — identity, usage and trademark rules.
-- `tokens/` — canonical [DTCG 2025.10](https://www.designtokens.org/tr/2025.10/format/) screen tokens and theme resolver.
-- `standards/` — physical colour standards and retired values.
-- `src/` — canonical artwork and frozen type outlines.
-- `mark/`, `wordmark/`, `avatar/`, `lockup/`, `sheet/` — generated exports.
-- `packaging/` — OpenDrone retail-packaging artwork requirements and vendor
+- `BRAND.md`: identity, usage and trademark rules.
+- `tokens/`: canonical [DTCG 2025.10](https://www.designtokens.org/tr/2025.10/format/) screen tokens and theme resolver.
+- `standards/`: physical colour standards and retired values.
+- `src/`: canonical artwork and frozen type outlines.
+- `mark/`, `wordmark/`, `avatar/`, `lockup/`, `sheet/`: generated exports.
+- `packaging/`: OpenDrone retail-packaging artwork requirements and vendor
   production guidance; compliance claims resolve from `incutec-org/incutec-compliance`.
-- `radio/` — OpenDrone-branded EdgeTX fleet assets and the idempotent installer.
-- `tools/` — deterministic, dependency-free generator.
+- `radio/`: OpenDrone-branded EdgeTX fleet assets and the idempotent installer.
+- `tools/`: deterministic, dependency-free generator.
 
 ## Workflow
 
