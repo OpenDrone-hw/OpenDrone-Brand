@@ -13,4 +13,4 @@ data; the `.bin` files are retained reference images and must not be flashed
 blindly onto a different model or hardware revision.
 
 This directory owns OpenDrone-specific media and configuration only. Generic
-bench procedures and resulting evidence belong in `incutec-org/incutec-testing`.
+bench procedures and resulting evidence are kept privately by Incutec.

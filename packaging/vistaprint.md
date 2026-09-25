@@ -129,7 +129,6 @@ This keeps one box print run valid across batches and revisions.
   and the DoC.
 - The INCUTEC word mark was filed as an EU trade mark on 3 July 2026 and is
   not registered yet; OpenDrone is not filed. Use TM, not (R), on packaging.
-  ([Notion task](https://app.notion.com/p/395fe06764e1819b9072cb7fa80cc1e8))
 - Manufacturer identity and contact come from `CE.md`, including
   `contact@opendrone.be`; other documents are not authoritative for the box.
 
@@ -140,7 +139,7 @@ This keeps one box print run valid across batches and revisions.
    ("Uitloop") and fold lines. Pick the smallest box that fits board + ESD bag +
    insert card; prefer **one shared box size across all 30×30/20×20 SKUs** so
    art changes are the only per-SKU cost.
-2. **Skip the €12 "Beschrijf uw ontwerpidee" design service.** All artwork is
+2. **Skip the "Beschrijf uw ontwerpidee" design service.** All artwork is
    generated locally (board SVGs + brand vectors + this copy spec); the service
    adds a round-trip with a designer who has none of the compliance context.
 3. **Workflow:** download Vistaprint's dieline template for the chosen box,
@@ -154,8 +153,8 @@ This keeps one box print run valid across batches and revisions.
    Matte finish suits the flat-vector look better than gloss.
 5. **Files Vistaprint accepts:** PDF preferred for print surfaces; PNG/JPG under
    10 MB for the design-service brief (not used) and editor uploads.
-6. **Order sizing:** box unit price drops steeply with quantity; the €45.91
-   editor price is the small-quantity trap. Order per-SKU volume aligned with
+6. **Order sizing:** box unit price drops steeply with quantity, so the
+   small-quantity editor price is a trap. Order per-SKU volume aligned with
    the first production batch, one proof unit first.
 
 ## Insert card
