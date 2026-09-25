@@ -18,7 +18,7 @@ standards and generated identity assets.
 - `src/`: canonical artwork and frozen type outlines.
 - `mark/`, `wordmark/`, `avatar/`, `lockup/`, `sheet/`: generated exports.
 - `packaging/`: OpenDrone retail-packaging artwork requirements and vendor
-  production guidance; compliance claims resolve from `incutec-org/incutec-compliance`.
+  production guidance; compliance evidence is kept privately by Incutec.
 - `radio/`: OpenDrone-branded EdgeTX fleet assets and the idempotent installer.
 - `tools/`: deterministic, dependency-free generator.
 
