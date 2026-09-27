@@ -14,6 +14,7 @@ standards and generated identity assets.
 
 - `BRAND.md`: identity, usage and trademark rules.
 - `tokens/`: canonical [DTCG 2025.10](https://www.designtokens.org/tr/2025.10/format/) screen tokens and theme resolver.
+- `tokens/dist/opendrone-tokens.css`: generated `--od-*` CSS custom properties for web consumers.
 - `standards/`: physical colour standards and retired values.
 - `src/`: canonical artwork and frozen type outlines.
 - `mark/`, `wordmark/`, `avatar/`, `lockup/`, `sheet/`: generated exports.
@@ -26,8 +27,22 @@ standards and generated identity assets.
 
 ```sh
 python3 tools/generate.py          # regenerate assets
-python3 tools/generate.py --check  # verify committed SVGs exactly
+python3 tools/generate.py --check  # verify committed SVGs and token CSS exactly
 ```
+
+| Output | Source | `--check` |
+| --- | --- | --- |
+| `mark/`, `wordmark/`, `avatar/`, `lockup/`, `sheet/` SVG | `src/`, `tokens/core.tokens.json` | fails on any byte difference |
+| PDF and PNG renditions | the SVGs, via `rsvg-convert` | reports renderer drift, does not fail |
+| `tokens/dist/opendrone-tokens.css` | `tokens/resolver.json` and the token files it names | fails when stale or missing |
+
+The token CSS puts the resolver's default theme (light) on `:root`. The dark
+theme overrides only the values that differ, under
+`@media (prefers-color-scheme: dark)` (unless `data-theme="light"` is set) and
+under `[data-theme="dark"]`. Names are the token path with an `--od-` prefix:
+`color.brand.gold` (`#ffb700`) is `--od-color-brand-gold`. The header comment
+names the generator and carries `content-sha256`, the SHA-256 of every byte
+after the header, so a vendored copy can be verified on its own.
 
 Do not edit generated artwork. PDF and PNG bytes may vary with the local
 renderer; SVG output is deterministic.

@@ -18,7 +18,7 @@ Read `BRAND.md` before visual work.
 
 ## By task
 
-- Change the artwork or a colour: edit `src/` or `tokens/`, run `python3 tools/generate.py`, commit the regenerated `mark/`, `wordmark/`, `avatar/`, `lockup/` and `sheet/` output with the source change.
-- Verify before a pull request: `python3 tools/generate.py --check` exits 0 when the committed SVGs match the generator.
+- Change the artwork or a colour: edit `src/` or `tokens/`, run `python3 tools/generate.py`, commit the regenerated `mark/`, `wordmark/`, `avatar/`, `lockup/`, `sheet/` and `tokens/dist/` output with the source change.
+- Verify before a pull request: `python3 tools/generate.py --check` exits 0 when the committed SVGs and `tokens/dist/opendrone-tokens.css` match the generator.
 - Set up a test-fleet radio: mount the EdgeTX SD card, then `python3 radio/apply_radio_setup.py "/Volumes/RADIO" radio/boot.wav`; it backs up `MODELS/model00.yml` and `RADIO/radio.yml` first (see `radio/README.md`).
 - Prepare packaging artwork: follow `packaging/vistaprint.md`; board art comes from the hardware tooling's `packaging_art.py` with `--color` and `--body` set, as that file specifies.
