@@ -24,14 +24,14 @@ artwork and production only; it must not invent or override legal copy.
 ### Front (face)
 - **OpenDrone** product name, marketed form: e.g. *OpenESC 30x30*, *OpenFC Lite Mini*, *OpenRX Lite* (`../../../stock/product_skus.json` for the canonical list).
 - Gold board art (front side of the board is the default face; the ESC's back is the better-looking side, pick per SKU).
-- One spec line, gold, max ~6 words. Per current SKUs:
+- One spec line, gold, max ~6 words. Ratings come from the board README `Input` and `Continuous` rows at the shipped tag:
 
 | SKU | Spec line |
 |---|---|
-| OpenESC 30x30 (OPENESC-3030) | `4-in-1 ESC · 3-6S · 60 A/channel · AM32` |
-| OpenESC 20x20 (OPENESC-2020) | `4-in-1 ESC · 3-6S · 40 A/channel · AM32` |
-| OpenFC Lite (OPENFC-LITE-3030) | `Flight controller · 2-6S · Betaflight` |
-| OpenFC Lite Mini (OPENFC-LITE-2020) | `Flight controller · 2-6S · Betaflight` |
+| OpenESC 30x30 (OPENESC-3030) | `4-in-1 ESC · 2-8S · 60 A/channel · AM32` |
+| OpenESC 20x20 (OPENESC-2020) | `4-in-1 ESC · 2-6S · 40 A/channel · AM32` |
+| OpenFC Lite (OPENFC-LITE-3030) | `Flight controller · 3-8S · Betaflight` |
+| OpenFC Lite Mini (OPENFC-LITE-2020) | `Flight controller · 3-6S · Betaflight` |
 | OpenRX Lite (OPENRX-LITE) | `ExpressLRS 2.4 GHz receiver` |
 | OpenRX Mono (OPENRX-MONO) | `ExpressLRS 868 MHz + 2.4 GHz` |
 | OpenRX Gemini (OPENRX-GEMINI) | `ExpressLRS true-diversity receiver` |
@@ -89,7 +89,7 @@ Resolve legal fields from the canonical product record at artwork approval:
 [Product Name]
 Model: [internal SKU]        (SN/batch: see label note below)
 
-[manufacturer legal name, postal address and contact from CE.md]
+[manufacturer legal name, postal address and email from compliance company.json]
 
 [CE only when canonical status is READY]   [WEEE crossed-out bin if applicable]
 Open Source Hardware: CERN-OHL-S-2.0
@@ -111,11 +111,12 @@ Made in China · Designed in Belgium
 Vistaprint boxes are fixed-artwork bulk prints. Everything unit- or
 batch-specific goes on a small in-house label applied to a reserved matte area
 (~50×25 mm) on the back panel:
-- `SN: [batch]-[serial]` (GPSR traceability)
+- `SN: <SKU>-00001`, the sellable-unit serial form in
+  `../../../testing/Runs/README.md` (GPSR traceability)
 - EAN-13 barcode: **no GTINs exist yet anywhere in the vault**; the area is
   reserved until GS1 codes are assigned. Product and bundle identity must match
   the declaration unit in `CE.md`.
-- Hardware revision (e.g. `V1.0`).
+- Hardware revision as the board tag names it (e.g. `rev3.3`).
 
 This keeps one box print run valid across batches and revisions.
 
@@ -129,8 +130,9 @@ This keeps one box print run valid across batches and revisions.
   and the DoC.
 - The INCUTEC word mark was filed as an EU trade mark on 3 July 2026 and is
   not registered yet; OpenDrone is not filed. Use TM, not (R), on packaging.
-- Manufacturer identity and contact come from `CE.md`, including
-  `contact@opendrone.be`; other documents are not authoritative for the box.
+- Manufacturer identity and contact come from
+  `../../../compliance/company.json` (legal name, postal address, email);
+  other documents are not authoritative for the box.
 
 ## Vistaprint procedure
 
