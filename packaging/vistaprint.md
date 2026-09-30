@@ -58,9 +58,8 @@ these is a derived spec. Each is **proposed, not yet ordered**.
 | OPENFRAME-3 | flat stack 112 x 50 x 37 mm, fasteners excluded | Productdozen, inner at least 122 x 60 x 42 mm | Productdozen, CMYK digital, matte; board grade unknown |
 | OPENFRAME-5 | flat stack 147 x 67.6 x 48.5 mm, fasteners excluded | Productdozen, inner at least 157 x 78 x 54 mm | Productdozen, CMYK digital, matte; board grade unknown |
 
-Fit calculation. Part sizes come from the frame supplier's drawings of
-2026-08-10, whose plate
-thicknesses match `OpenDrone/hardware/OpenFrame/docs/DESIGN.md`. That geometry is
+Fit calculation. Part sizes come from the frame drawings of 2026-08-10, whose
+plate thicknesses match `OpenDrone/hardware/OpenFrame/docs/DESIGN.md`. That geometry is
 the pre-reset design; the OpenFrame README states the CAD is not finalised, so
 re-run this when the drawings change.
 
@@ -75,8 +74,8 @@ re-run this when the drawings change.
   unverified.
 - Minimum inner box = envelope plus 5 mm clearance per side on length and width
   and 5 mm on height, rounded up to whole millimetres.
-- The only packaging bought so far, the RAJAPACK 18 x 26.5 cm padded mailer
-  (order 2493987), is the outer shipping layer and not a retail box. Both flat
+- The only packaging bought so far, an 18 x 26.5 cm padded mailer, is the
+  outer shipping layer and not a retail box. Both flat
   stacks fit its face (180 x 265 mm against 112 x 50 and 147 x 67.6 mm), but its
   usable thickness is not recorded, so it is not proposed as the box.
 
