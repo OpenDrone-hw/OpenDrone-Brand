@@ -99,7 +99,7 @@ Made in China · Designed in Belgium
 
 - **Radio SKUs (OpenRX family) additionally:** use only the final frequency bands and measured maximum power recorded in `CE.md` after its declaration gates pass. Do not print design limits as measured declarations.
 - **Warning block:** derive the short form from the completed product risk assessment and instructions referenced by the canonical technical-file requirements:
-  `WARNING: Not a toy. Intended for users aged 18+ with FPV drone assembly experience. Risk of fire if wired incorrectly. Full manual: opendrone.be/docs/[product]`
+  `WARNING: Not a toy. Not for children under 14. Intended for users with FPV drone assembly experience. Risk of fire if wired incorrectly. Full manual: opendrone.be/docs/[product]`
 - Language: follow the Member-State language rule in `CE.md`; do not treat English-only box copy or an online manual as a blanket substitute for required supplied instructions.
 
 ### Sides
