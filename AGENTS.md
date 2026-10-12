@@ -1,24 +1,18 @@
-# Agent instructions
+# OpenDrone brand
 
-Read `BRAND.md` before visual work.
+The OpenDrone product identity: tokens, mark, wordmark, avatar, lockup, packaging and radio assets, generated from `src/` and `tokens/`.
 
-- `tokens/` is canonical for screen values.
-- `standards/production.json` is canonical for physical production.
-- Edit `src/` or `tools/`, never generated asset directories directly.
-- Do not invent colours, typefaces, logo variants or visual effects.
-- Preserve the existing public asset paths.
+Validate: `python3 tools/generate.py --check`
+
+## Boundaries
+
+- Edit `src/`, `tokens/` or `tools/`, never generated asset directories; regenerate with `python3 tools/generate.py`.
+- No invented colours, typefaces, logo variants or visual effects; public asset paths stay stable.
+- `standards/production.json` is canonical for physical production; compliance facts come from the compliance repository.
 - `board-art/` is independent reference work, not generator output.
-- `packaging/` owns OpenDrone-specific packaging direction, but compliance
-  facts and readiness come from the sibling compliance repository.
-- `radio/` owns OpenDrone-branded EdgeTX media and fleet setup; keep it
-  independent of any operator's calibration data.
-- Validation: `python3 tools/generate.py --check` after every change. CI runs
-  the same command on plain Ubuntu (`.github/workflows/ci.yml`); PDF and PNG
-  bytes are reported, not failed.
+- `radio/` stays independent of any operator's calibration data.
 
-## By task
+## Pointers
 
-- Change the artwork or a colour: edit `src/` or `tokens/`, run `python3 tools/generate.py`, commit the regenerated `mark/`, `wordmark/`, `avatar/`, `lockup/`, `sheet/` and `tokens/dist/` output with the source change.
-- Verify before a pull request: `python3 tools/generate.py --check` exits 0 when the committed SVGs and `tokens/dist/opendrone-tokens.css` match the generator.
-- Set up a test-fleet radio: mount the EdgeTX SD card, then `python3 radio/apply_radio_setup.py "/Volumes/RADIO" radio/boot.wav`; it backs up `MODELS/model00.yml` and `RADIO/radio.yml` first (see `radio/README.md`).
-- Prepare packaging artwork: follow `packaging/vistaprint.md`; board art comes from the hardware tooling's `packaging_art.py` with `--color` and `--body` set, as that file specifies.
+- `BRAND.md`: read before visual work
+- `radio/README.md`, `packaging/vistaprint.md`
