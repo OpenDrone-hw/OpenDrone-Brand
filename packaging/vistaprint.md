@@ -22,7 +22,7 @@ artwork and production only; it must not invent or override legal copy.
 ## Panel-by-panel content
 
 ### Front (face)
-- **OpenDrone** product name, marketed form: e.g. *OpenESC 30x30*, *OpenFC Lite Mini*, *OpenRX Lite* (`../../../stock/product_skus.json` for the canonical list).
+- **OpenDrone** product name, marketed form: e.g. *OpenESC 30x30*, *OpenFC Lite 20x20*, *OpenRX Lite* (`../../../stock/product_skus.json` for the canonical list).
 - Gold board art (front side of the board is the default face; the ESC's back is the better-looking side, pick per SKU).
 - One spec line, gold, max ~6 words. Ratings come from the board README `Input` and `Continuous` rows at the shipped tag:
 
@@ -30,8 +30,8 @@ artwork and production only; it must not invent or override legal copy.
 |---|---|
 | OpenESC 30x30 (OPENESC-3030) | `4-in-1 ESC · 2-8S · 60 A/channel · AM32` |
 | OpenESC 20x20 (OPENESC-2020) | `4-in-1 ESC · 2-6S · 40 A/channel · AM32` |
-| OpenFC Lite (OPENFC-LITE-3030) | `Flight controller · 3-8S · Betaflight` |
-| OpenFC Lite Mini (OPENFC-LITE-2020) | `Flight controller · 3-6S · Betaflight` |
+| OpenFC Lite 30x30 (OPENFC-LITE-3030) | `Flight controller · 3-8S · Betaflight` |
+| OpenFC Lite 20x20 (OPENFC-LITE-2020) | `Flight controller · 3-6S · Betaflight` |
 | OpenRX Lite (OPENRX-LITE) | `ExpressLRS 2.4 GHz receiver` |
 | OpenRX Mono (OPENRX-MONO) | `ExpressLRS 868 MHz + 2.4 GHz` |
 | OpenRX Gemini (OPENRX-GEMINI) | `ExpressLRS true-diversity receiver` |
